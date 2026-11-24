@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zombie Apocalypse - WWZ Aftermath Edition</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Three.js 3D Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <!-- 3D Canvas Container -->
+    <div id="game-container"></div>
+
+    <!-- Directional Damage Vignette -->
+    <div id="damage-vignette"></div>
+
+    <!-- Center Crosshairs & Hitmarkers -->
+    <div id="crosshair">
+        <div class="ch-line ch-top"></div>
+        <div class="ch-line ch-bottom"></div>
+        <div class="ch-line ch-left"></div>
+        <div class="ch-line ch-right"></div>
+        <div class="ch-dot"></div>
+    </div>
+
+    <div id="hitmarker">
+        <div class="hm-tick hm-tl"></div>
+        <div class="hm-tick hm-tr"></div>
+        <div class="hm-tick hm-bl"></div>
+        <div class="hm-tick hm-br"></div>
+    </div>
+
+    <div id="headshot-skull">☠ HEADSHOT</div>
+
+    <!-- HUD Overlay -->
+    <div id="hud">
+        <!-- Top Wave Banner -->
+        <div id="wave-banner">
+            <div id="wave-banner-title">WAVE 1: INITIAL RECON</div>
+            <div id="wave-banner-sub">Small clusters approaching. Defend the catwalk!</div>
+        </div>
+
+        <!-- Top Left: Mission Status -->
+        <div id="mission-status">
+            <div class="hud-title" id="wave-number">WAVE 1</div>
+            <div class="hud-threat" id="threat-level">THREAT: CALM</div>
+            <div class="hud-count" id="enemies-left">0 ZEKES DETECTED</div>
+        </div>
+
+        <!-- Top Right: Score & Stats -->
+        <div id="stats-box">
+            <div class="stat-item">SCORE: <span class="stat-val" id="score-val">0</span></div>
+            <div class="stat-item">KILLS: <span class="stat-val" id="kills-val">0</span></div>
+            <div class="stat-item">HEADSHOTS: <span class="stat-val" id="headshots-val">0</span></div>
+        </div>
+
+        <!-- Bottom Left: Vitals (Health, Armor, Stamina) -->
+        <div id="vitals-box">
+            <div class="bar-row">
+                <div class="bar-label"><span>VITALITY</span><span id="health-text">100 HP</span></div>
+                <div class="bar-track"><div id="health-fill"></div></div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-label"><span>BODY ARMOR</span></div>
+                <div class="bar-track"><div id="armor-fill"></div></div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-label"><span>STAMINA (SPRINT/MELEE)</span></div>
+                <div class="bar-track"><div id="stamina-fill"></div></div>
+            </div>
+        </div>
+
+        <!-- Bottom Right: Active Weapon & Ammo -->
+        <div id="weapon-box">
+            <div id="weapon-tier">TIER II</div>
+            <div id="weapon-name">ARK-103 ASSAULT RIFLE</div>
+            <div id="ammo-display">
+                <div id="current-mag">30</div>
+                <div id="reserve-ammo">/ 360</div>
+            </div>
+        </div>
+
+        <div id="camera-mode-badge">1ST PERSON [V]</div>
+        <div id="interact-prompt">PRESS [E] TO RESUPPLY AMMO & ARMOR</div>
+    </div>
+
+    <!-- START / TITLE SCREEN -->
+    <div id="start-screen" class="screen-overlay">
+        <h1 class="game-title">ZOMBIE APOCALYPSE</h1>
+        <p class="game-subtitle">SECTOR 4: OUTPOST MOSCOW // WWZ AFTERMATH ENGINE</p>
+
+        <button class="btn-tactical" id="btn-start" onclick="window.game.startGame()">
+            DEPLOY TO PERIMETER
+        </button>
+
+        <div class="controls-card">
+            <div style="font-weight: 700; color: #ff5500; letter-spacing: 2px;">COMBAT CONTROLS & TACTICS</div>
+            <div class="ctrl-grid">
+                <div><span class="ctrl-key">WASD</span> Movement</div>
+                <div><span class="ctrl-key">SHIFT</span> Sprint (Consumes Stamina)</div>
+                <div><span class="ctrl-key">LEFT CLICK</span> Fire Weapon</div>
+                <div><span class="ctrl-key">RIGHT CLICK</span> Aim Down Sights (ADS)</div>
+                <div><span class="ctrl-key">R</span> Reload Magazine</div>
+                <div><span class="ctrl-key">1, 2, 3, 4</span> Weapon Select (Rifle / Shotgun / Pistol / MGL)</div>
+                <div><span class="ctrl-key">F / MMB</span> Heavy Melee Cleave / Machete</div>
+                <div><span class="ctrl-key">V</span> Toggle 1st Person / 3rd Person View</div>
+                <div><span class="ctrl-key">E</span> Resupply at Ammo Crate</div>
+                <div><span class="ctrl-key">ESC / P</span> Pause / Tactical Menu</div>
+            </div>
+            <div style="font-size: 12px; color: #8899aa; margin-top: 10px; line-height: 1.4;">
+                ★ <strong>WWZ Pro Tip:</strong> When swarms pile up into climbing pyramids against the catwalk wall, shoot the base zombies or shoot nearby explosive red barrels to collapse the entire stack!
+            </div>
+        </div>
+    </div>
+
+    <!-- PAUSE SCREEN -->
+    <div id="pause-screen" class="screen-overlay" style="display: none;">
+        <h1 class="game-title" style="font-size: 55px;">TACTICAL PAUSE</h1>
+        <p class="game-subtitle">SECTOR 4 DEFENSE OPS</p>
+        <button class="btn-tactical" onclick="window.game.togglePause()">RESUME ENGAGEMENT</button>
+        <button class="btn-tactical" style="background: #333; border-color: #555; margin-top: 10px; font-size: 22px; padding: 6px 30px;" onclick="window.location.reload()">RESTART OUTPOST</button>
+    </div>
+
+    <!-- GAME OVER SCREEN -->
+    <div id="game-over-screen" class="screen-overlay" style="display: none;">
+        <h1 class="game-title" style="color: #ff0000;">OUTPOST OVERRUN</h1>
+        <p class="game-subtitle">THE SWARM HAS BREACHED SECTOR 4</p>
+
+        <div class="debrief-grid">
+            <div class="debrief-item">
+                <div class="debrief-label">ZEKES ELIMINATED</div>
+                <div class="debrief-val" id="final-kills">0</div>
+            </div>
+            <div class="debrief-item">
+                <div class="debrief-label">HEADSHOT KILLS</div>
+                <div class="debrief-val" id="final-headshots">0</div>
+            </div>
+            <div class="debrief-item">
+                <div class="debrief-label">WAVES SURVIVED</div>
+                <div class="debrief-val" id="final-waves">0</div>
+            </div>
+            <div class="debrief-item">
+                <div class="debrief-label">MISSION SCORE</div>
+                <div class="debrief-val" id="final-score">0</div>
+            </div>
+        </div>
+
+        <button class="btn-tactical" onclick="window.location.reload()">RE-ENGAGE PERIMETER</button>
+    </div>
+
+    <!-- Core Game Scripts in Dependency Order -->
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/weapons.js"></script>
+    <script src="js/defenses.js"></script>
+    <script src="js/zombies.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+/* ==========================================================================
+   ZOMBIE APOCALYPSE - WWZ AFTERMATH TACTICAL HUD & APOCALYPTIC UI STYLES
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Rajdhani:wght@600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #050709;
+    font-family: 'Rajdhani', sans-serif;
+    color: #ffffff;
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* --- FULLSCREEN DAMAGE VIGNETTE --- */
+#damage-vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    background: radial-gradient(circle, transparent 40%, rgba(180, 0, 0, 0.45) 80%, rgba(140, 0, 0, 0.85) 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+}
+
+/* --- RETICLE & CROSSHAIR --- */
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 15;
+    width: 32px;
+    height: 32px;
+}
+
+.ch-line {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+.ch-top { top: 0; left: 15px; width: 2px; height: 9px; }
+.ch-bottom { bottom: 0; left: 15px; width: 2px; height: 9px; }
+.ch-left { top: 15px; left: 0; width: 9px; height: 2px; }
+.ch-right { top: 15px; right: 0; width: 9px; height: 2px; }
+.ch-dot {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 4px;
+    height: 4px;
+    background: #ff2222;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #ff2222;
+}
+
+/* --- HITMARKER & HEADSHOT FEEDBACK --- */
+#hitmarker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    pointer-events: none;
+    z-index: 16;
+    width: 26px;
+    height: 26px;
+    opacity: 0;
+}
+
+#hitmarker.active {
+    animation: hitmarkerAnim 0.15s ease-out forwards;
+}
+
+.hm-tick {
+    position: absolute;
+    width: 2px;
+    height: 8px;
+    background: #ffffff;
+    box-shadow: 0 0 4px #ffffff;
+}
+.hm-tl { top: 0; left: 0; transform: rotate(45deg); }
+.hm-tr { top: 0; right: 0; transform: rotate(-45deg); }
+.hm-bl { bottom: 0; left: 0; transform: rotate(-45deg); }
+.hm-br { bottom: 0; right: 0; transform: rotate(45deg); }
+
+@keyframes hitmarkerAnim {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+}
+
+#headshot-skull {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    pointer-events: none;
+    z-index: 17;
+    font-size: 28px;
+    color: #ff1100;
+    text-shadow: 0 0 12px #ff0000;
+    opacity: 0;
+}
+
+#headshot-skull.active {
+    animation: skullAnim 0.35s ease-out forwards;
+}
+
+@keyframes skullAnim {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+    70% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+/* --- HEADS-UP DISPLAY (HUD) --- */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    display: none;
+}
+
+/* Top Center: Swarm Wave Banner */
+#wave-banner {
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, transparent, rgba(15, 20, 26, 0.92) 20%, rgba(15, 20, 26, 0.92) 80%, transparent);
+    border-top: 2px solid #ff4400;
+    border-bottom: 2px solid #ff4400;
+    padding: 12px 60px;
+    text-align: center;
+    transition: top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+#wave-banner.banner-active {
+    top: 25px;
+}
+
+#wave-banner-title {
+    font-family: 'Teko', sans-serif;
+    font-size: 34px;
+    letter-spacing: 3px;
+    color: #ff4400;
+    text-shadow: 0 0 10px rgba(255, 68, 0, 0.7);
+}
+
+#wave-banner-sub {
+    font-size: 15px;
+    color: #cccccc;
+    letter-spacing: 1px;
+}
+
+/* Top Left: Mission & Wave Status */
+#mission-status {
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    background: rgba(10, 14, 18, 0.75);
+    border-left: 3px solid #ff3300;
+    padding: 10px 18px;
+    backdrop-filter: blur(4px);
+}
+
+.hud-title {
+    font-family: 'Teko', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: #ff3300;
+    line-height: 1;
+}
+
+.hud-threat {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.hud-count {
+    font-size: 14px;
+    color: #8899aa;
+    margin-top: 2px;
+}
+
+/* Top Right: Stats / Score */
+#stats-box {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    background: rgba(10, 14, 18, 0.75);
+    border-right: 3px solid #ff8800;
+    padding: 10px 18px;
+    text-align: right;
+    backdrop-filter: blur(4px);
+}
+
+.stat-item {
+    font-size: 15px;
+    color: #ccc;
+    letter-spacing: 1px;
+}
+
+.stat-val {
+    font-weight: 700;
+    color: #ffaa00;
+}
+
+/* Bottom Left: Health, Armor, Stamina */
+#vitals-box {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    width: 280px;
+    background: rgba(10, 14, 18, 0.8);
+    border-left: 4px solid #00ff88;
+    padding: 14px 18px;
+    backdrop-filter: blur(4px);
+}
+
+.bar-row {
+    margin-bottom: 8px;
+}
+
+.bar-row:last-child {
+    margin-bottom: 0;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+    color: #aaa;
+}
+
+.bar-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+#health-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff1100, #00ff88);
+    transition: width 0.15s ease-out;
+}
+
+#armor-fill {
+    width: 100%;
+    height: 100%;
+    background: #00ccff;
+    transition: width 0.15s ease-out;
+}
+
+#stamina-fill {
+    width: 100%;
+    height: 100%;
+    background: #ffbb00;
+    transition: width 0.1s ease-out;
+}
+
+/* Bottom Right: Weapon & Ammo */
+#weapon-box {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(10, 14, 18, 0.8);
+    border-right: 4px solid #ff4400;
+    padding: 14px 22px;
+    text-align: right;
+    backdrop-filter: blur(4px);
+}
+
+#weapon-tier {
+    font-size: 12px;
+    color: #ff9900;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#weapon-name {
+    font-family: 'Teko', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: #ffffff;
+    line-height: 1.1;
+}
+
+#ammo-display {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+#current-mag {
+    font-family: 'Teko', sans-serif;
+    font-size: 48px;
+    color: #ffcc00;
+    line-height: 0.9;
+}
+
+#reserve-ammo {
+    font-family: 'Teko', sans-serif;
+    font-size: 26px;
+    color: #8899aa;
+}
+
+/* Camera Mode Badge */
+#camera-mode-badge {
+    position: absolute;
+    bottom: 125px;
+    right: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 10px;
+    border: 1px solid #444;
+    letter-spacing: 1px;
+}
+
+/* Interact Prompt */
+#interact-prompt {
+    position: absolute;
+    bottom: 22%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 26, 32, 0.9);
+    border: 1px solid #ffaa00;
+    color: #ffcc00;
+    padding: 8px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    display: none;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
+}
+
+/* --- OVERLAY SCREENS (Start, Pause, GameOver) --- */
+.screen-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, rgba(12, 16, 22, 0.92) 0%, rgba(5, 7, 10, 0.98) 100%);
+    backdrop-filter: blur(6px);
+}
+
+.game-title {
+    font-family: 'Teko', sans-serif;
+    font-size: 80px;
+    letter-spacing: 6px;
+    color: #ff3300;
+    text-shadow: 0 0 25px rgba(255, 51, 0, 0.6);
+    line-height: 0.9;
+    text-align: center;
+}
+
+.game-subtitle {
+    font-size: 18px;
+    letter-spacing: 5px;
+    color: #aaaaaa;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+.btn-tactical {
+    background: linear-gradient(180deg, #ff4400 0%, #aa1100 100%);
+    border: 1px solid #ff7744;
+    color: #ffffff;
+    font-family: 'Teko', sans-serif;
+    font-size: 30px;
+    letter-spacing: 3px;
+    padding: 10px 48px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 15px;
+    box-shadow: 0 0 20px rgba(255, 51, 0, 0.4);
+    transition: all 0.2s ease;
+}
+
+.btn-tactical:hover {
+    transform: scale(1.05);
+    background: linear-gradient(180deg, #ff6622 0%, #cc2200 100%);
+    box-shadow: 0 0 30px rgba(255, 68, 0, 0.8);
+}
+
+.controls-card {
+    background: rgba(20, 26, 34, 0.85);
+    border: 1px solid #2e3b4e;
+    padding: 18px 26px;
+    border-radius: 4px;
+    margin-top: 25px;
+    max-width: 620px;
+    width: 90%;
+}
+
+.ctrl-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 16px;
+    font-size: 14px;
+    color: #ccc;
+    margin-top: 10px;
+}
+
+.ctrl-key {
+    color: #ffcc00;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+/* Debriefing stats on Game Over */
+.debrief-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 24px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.debrief-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 18px;
+    border-left: 3px solid #ff3300;
+}
+
+.debrief-label {
+    font-size: 12px;
+    color: #8899aa;
+    letter-spacing: 1px;
+}
+
+.debrief-val {
+    font-family: 'Teko', sans-serif;
+    font-size: 32px;
+    color: #ffaa00;
+}
