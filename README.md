@@ -1,5 +1,10 @@
 # Zombie Apocalypse (WWZ: Aftermath Edition)
 
+[![Play Live Game](https://img.shields.io/badge/PLAY_LIVE-Zombie_Apocalypse-red?style=for-the-badge&logo=googlechrome)](https://adiiwithgit.github.io/zombie-apocalypse/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-Active-brightgreen?style=for-the-badge&logo=github)](https://adiiwithgit.github.io/zombie-apocalypse/)
+
+> 🎮 **Play Online Directly in your Browser:** [https://adiiwithgit.github.io/zombie-apocalypse/](https://adiiwithgit.github.io/zombie-apocalypse/)
+
 A high-octane 3D browser game inspired by **World War Z: Aftermath**, featuring massive zombie swarms, climbing pyramid mechanics, first-person & third-person perspectives, deployable defenses, and procedural ballistic and audio synthesis.
 
 ---
